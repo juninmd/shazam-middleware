@@ -7,14 +7,13 @@ module.exports = (options) => {
         },
         exception: (err, req, res, next) => {
             let date = new Date();
-            console.log(options.name);
             console.error(`[${req.method}] ${req.protocol + '://' + req.get('host') + req.originalUrl} | Erro: ${err.message} | Data: ${date.toLocaleString()} | IP: ${getip(req)}`);
 
             let paramters = {
                 url: options.slack.urlHook,
                 method: 'POST',
                 body: {
-                    text: options.api.name,
+                    text: "*" + options.api.name + " - " + options.api.version + "*",
                     username: options.slack.botusername,
                     channel: options.slack.channel,
                     icon_url: options.slack.iconUrl,
@@ -24,7 +23,9 @@ module.exports = (options) => {
                             title: err.message,
                             title_link: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
                             footer: `[${req.method}] - ${req.originalUrl}`,
-                            ts: Math.round(date.getTime() / 1000)
+                            ts: Math.round(date.getTime() / 1000),
+                            pretext: "```" + err.stack + "```",
+                            mrkdwn_in: ["text", "pretext", "title"]
                         }
                     ]
                 },
@@ -33,7 +34,7 @@ module.exports = (options) => {
                 },
                 json: true
             };
-            
+
             apiRequest.requestApi(paramters)
                 .then(q => {
                     console.log(`Notificado no #channel ${options.slack.channel}`);
