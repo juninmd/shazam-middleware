@@ -121,19 +121,13 @@ module.exports = {
 function TratarStatusCode(status) {
     switch (status) {
         case 200:
-            return 200
         case 202:
-            return 202;
         case 404:
-            return 404;
         case 304:
-            return 304;
         case 204:
-            return 204;
         case 401:
-            return 401;
         case 400:
-            return 400;
+            return status;
         default:
             return 500;
     }

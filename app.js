@@ -14,9 +14,9 @@ module.exports = (options) => {
                 method: 'POST',
                 body: {
                     text: "*" + options.api.name + " - " + options.api.version + "*",
-                    username: options.slack.botusername,
+                    username: (options.slack.botusername || "Shazam"),
                     channel: options.slack.channel,
-                    icon_url: options.slack.iconUrl,
+                    icon_url: (options.slack.iconUrl || "http://dclegends.wiki/images/d/d9/Shazam_Billy_Batson_Portrait.png"),
                     attachments: [
                         {
                             color: "#ff0000",
