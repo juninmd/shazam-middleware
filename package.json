@@ -1,5 +1,5 @@
 {
-  "name": "shazam",
+  "name": "shazam-middleware",
   "version": "1.0.0",
   "main": "app.js",
   "license": "MIT",

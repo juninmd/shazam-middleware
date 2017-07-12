@@ -78,7 +78,7 @@ module.exports = {
                     sendApigeeResponse(500, {
                         developerMessage: 'Erro não esperado pelo sistema',
                         userMessage: 'Ocorreu alguma falha inesperada em alguma api, tente novamente'
-                    }, typeof (error) == "object" ? error : tryJson(error), { isApiError: true });
+                    }, typeof (error) == "object" ? error : { erro: 'error' }, { isApiError: true });
                     return;
                 }
                 else {
@@ -98,58 +98,15 @@ module.exports = {
                 return;
             }
 
-            if (response.headers && response.headers["content-type"].indexOf("application/json") !== 0) {
-                sendApigeeResponse(500, {
-                    developerMessage: 'O Content Type esperado é diferente do formato JSON',
-                    userMessage: 'Erro na chamada de Api! Tente outra vez.'
-                }, response.body, { isApiError: true });
+            if (response.statusCode = 200 && response.body == "ok") {
+                sendApigeeResponse(200, {}, { sucesso: response.body });
                 return;
             }
 
-            if (response.statusCode != 200 && response.statusCode != 202) {
-                if (typeof (response.body) == 'object') {
-                    let json = response.body;
-                }
-                else {
-                    let json = tryJson(response.body);
-                }
-
-
-                /**
-                 * Entendemos que esse objeto é uma Request Message
-                 * Assim retornamos o objeto inteiro.
-                 */
-                if (json.message != null && json.message.developerMessage != null && json.message.userMessage != null) {
-                    callback(json);
-                    return;
-                }
-
-                /**
-               * Entendemos que esse objeto é um retorno válido APIGEE
-               * Assim adaptamos o seu retorno ao padrão Request Message
-               */
-                if (json.developerMessage && json.userMessage) {
-                    sendApigeeResponse(response.statusCode, {
-                        developerMessage: json.developerMessage,
-                        userMessage: json.userMessage
-                    }, json, { isApigeeError: true });
-                    return;
-                }
-
-                sendApigeeResponse(500, {
-                    developerMessage: response.body,
-                    userMessage: 'Algum erro totalmente inesperado surgiu.'
-                }, json, { isInexpectedError: true });
-                return;
-            }
-
-            if (typeof (response.body) == 'object') {
-                sendApigeeResponse(200, {}, response.body);
-            }
-            else {
-                sendApigeeResponse(200, {}, tryJson(response.body));
-            }
-
+            sendApigeeResponse(500, {
+                developerMessage: 'Falha inesperada',
+                userMessage: 'Erro na chamada de Api! Tente outra vez.'
+            }, null, { isApiError: true });
             return;
         }
         catch (err) {
@@ -161,18 +118,6 @@ module.exports = {
     }
 };
 
-
-function tryJson(content) {
-    try {
-        return JSON.parse(content);
-    } catch (ex) {
-        return {
-            message: { userMessage: 'A Api retornou um formato não suportado', developerMessage: content },
-            statusCode: 500,
-            stack: ex.message
-        }
-    }
-}
 function TratarStatusCode(status) {
     switch (status) {
         case 200:
