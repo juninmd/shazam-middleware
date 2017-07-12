@@ -1,10 +1,16 @@
 # shazam-middleware
 
+[![NPM Version](https://img.shields.io/npm/v/shazam-middleware.svg)](https://npmjs.org/package/shazam-middleware)
+[![NPM Downloads](https://img.shields.io/npm/dm/shazam-middleware.svg)](https://npmjs.org/package/shazam-middleware)
+[![GitHub issues](https://img.shields.io/github/issues/juninmd/shazam-middleware.svg)](https://github.com/juninmd/shazam-middleware/issues)
+[![GitHub forks](https://img.shields.io/github/forks/juninmd/shazam-middleware.svg)](https://github.com/juninmd/shazam-middleware/network)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/juninmd/shazam-middleware.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
+
 ## What is shazam?
 * Shazam it's a `express` middleware to print on console of your application. His difference is that it notify the slack channel when occurs errors without validation.
 
 ## Requirements
-* Node
+* [Node](https://nodejs.org/en/)
 * [Express](https://www.npmjs.com/package/express)
 
 ## Installation
