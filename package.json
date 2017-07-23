@@ -1,8 +1,7 @@
 {
   "name": "shazam-middleware",
-  "description": "Shazam it's a express middleware to print on console of your application. His difference is that it notify the slack channel when occurs errors without validation.",
-  "version": "1.0.0",
-  "main": "app.js",
+   "version": "0.0.2",
+   "description": "Shazam it's a express middleware to print on console of your application. His difference is that it notify the slack channel when occurs errors without validation.",  "main": "app.js",
   "license": "MIT",
   "dependencies": {
     "request": "^2.81.0"
