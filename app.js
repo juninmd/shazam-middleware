@@ -6,19 +6,19 @@ module.exports = (options) => {
     console.log(`[Shazam-Middleware] Activated`);
     return {
         log: (req, res, next) => {
-            console.log(`[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | Data: ${new Date().toLocaleString()} | IP: ${getip(req)}`);
+            console.log(`[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | Date: ${new Date().toLocaleString()} | IP: ${getip(req)}`);
             next();
         },
         exception: (err, req, res, next) => {
             let date = new Date();
-            console.error(`[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | Erro: ${err.message} | Data: ${date.toLocaleString()} | IP: ${getip(req)}`);
+            console.error(`[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | Error: ${(err.message.developerMessage || err.message)} | Date: ${date.toLocaleString()} | IP: ${getip(req)}`);
 
 
-            if (options.slack) {
+            if (options.slack && (err.statusCode == null || err.statusCode === 500)) {
                 let attachments = [
                     {
                         color: "#ff0000",
-                        title: err.message,
+                        title: (err.message.developerMessage || err.message),
                         title_link: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
                         footer: `[${req.method}] - ${req.originalUrl}`,
                         ts: Math.round(date.getTime() / 1000),
@@ -45,20 +45,19 @@ module.exports = (options) => {
             if (res.headersSent || res.finished)
                 return;
 
-            res.status(500).send({
+            res.status(err.statusCode || 500).send({
                 message: {
-                    developerMessage: err.message,
-                    userMessage: `An unexpected crash occurred by the application, but do not worry, it has already been automatically reported to developers.`,
-                    userMessageBr: `Ocorreu uma falha inesperada pela aplicação, mas não se preocupe, ela já foi reportada automaticamente para os desenvolvedores.`,
+                    developerMessage: (err.message.developerMessage || err.message),
+                    userMessage: (err.message.userMessage || `An unexpected crash occurred by the application, but do not worry, it has already been automatically reported to developers.`),
                 },
                 isSuccess: false,
                 details: {
-                    stack: err.stack,
-                    isUnexpectedError: true,
+                    stack: err.stack || '-- Sem Stack --',
+                    isUnexpectedError: (!err.message.developerMessage),
                     route: `${req.method} - ${req.protocol + '://' + req.get('host') + req.originalUrl}`,
                     date: new Date()
                 },
-                statusCode: 500,
+                statusCode: (err.statusCode || 500),
             });
         }
     }
