@@ -15,14 +15,12 @@ module.exports = (options) => {
 
 
             if (options.slack && (err.statusCode == null || err.statusCode === 500)) {
-                let attachments = [
+                let attachments =
                     {
                         color: "#ff0000",
                         title: (err.message.developerMessage || err.message),
                         title_link: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
-                        footer: `[${req.method}] - ${req.originalUrl}`,
                         ts: Math.round(date.getTime() / 1000),
-                        pretext: "```" + err.stack + "```",
                         mrkdwn_in: ["text", "pretext", "title"],
                         fields: [
                             {
@@ -34,16 +32,31 @@ module.exports = (options) => {
                                 "title": "Environment",
                                 "value": process.env.NODE_ENV,
                                 "short": true
-                            }
+                            },
+                            {
+                                "title": 'Agente',
+                                "value": req.header('user-agent') || 'Desconhecido',
+                                "short": true
+                            },
+                            {
+                                "title": req.method,
+                                "value": req.originalUrl,
+                                "short": true
+                            },
                         ],
                     }
-                ];
-                sendSlack(options, attachments);
+
+                if (err.stack) {
+                    attachments.pretext = "```" + err.stack + "```";
+                }
+
+                sendSlack(options, [attachments]);
             }
 
 
             if (res.headersSent || res.finished)
                 return;
+
 
             res.status(err.statusCode || 500).send({
                 message: {
@@ -52,7 +65,7 @@ module.exports = (options) => {
                 },
                 isSuccess: false,
                 details: {
-                    stack: err.stack || '-- Sem Stack --',
+                    stack: err.stack || (err.message && err.message.developerMessage || '-- Sem Stack --'),
                     isUnexpectedError: (!err.message.developerMessage),
                     route: `${req.method} - ${req.protocol + '://' + req.get('host') + req.originalUrl}`,
                     date: new Date()
@@ -65,6 +78,7 @@ module.exports = (options) => {
 
 
 function sendSlack(options, attachments) {
+
     let paramters = {
         url: options.slack.urlHook,
         method: 'POST',
@@ -104,12 +118,11 @@ let handleGlobal = (options) => {
         console.error(`[Shazam-Middleware] Global Error | ${err.message}\nStack:\n${err.stack}`);
 
         if (options.slack) {
-            let attachments = [
+            let attachments =
                 {
                     color: "#ff0000",
                     title: err.message,
                     ts: Math.round(date.getTime() / 1000),
-                    pretext: "```" + err.stack + "```",
                     mrkdwn_in: ["text", "pretext", "title"],
                     fields: [
                         {
@@ -125,8 +138,12 @@ let handleGlobal = (options) => {
                     ],
 
                 }
-            ];
-            sendSlack(options, attachments);
+
+            if (err.stack) {
+                attachments.pretext = "```" + err.stack + "```";
+            }
+
+            sendSlack(options, [attachments]);
         }
     });
 }
@@ -137,12 +154,11 @@ let handlePromises = (options) => {
         console.error(`[Shazam-Middleware] Promise Error | ${err.message}\nStack:\n${err.stack}`);
 
         if (options.slack) {
-            let attachments = [
+            let attachments =
                 {
                     color: "#ff0000",
                     title: err.message,
                     ts: Math.round(date.getTime() / 1000),
-                    pretext: "```" + err.stack + "```",
                     mrkdwn_in: ["text", "pretext", "title"],
                     fields: [
                         {
@@ -158,8 +174,12 @@ let handlePromises = (options) => {
                     ],
 
                 }
-            ];
-            sendSlack(options, attachments);
+
+            if (err.stack) {
+                attachments.pretext = "```" + err.stack + "```";
+            }
+
+            sendSlack(options, [attachments]);
         }
     });
 }
