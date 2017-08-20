@@ -1,12 +1,14 @@
 const apiRequest = require('./apiRequest');
+const onFinished = require('on-finished')
 
 module.exports = (options) => {
     handlePromises(options);
     handleGlobal(options);
-    console.log(`[Shazam-Middleware] Activated`);
     return {
         log: (req, res, next) => {
             console.log(`[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | Date: ${new Date().toLocaleString()} | IP: ${getip(req)}`);
+
+            onFinished(res, logRequest)
             next();
         },
         exception: (err, req, res, next) => {
@@ -182,4 +184,9 @@ let handlePromises = (options) => {
             sendSlack(options, [attachments]);
         }
     });
+}
+
+function logRequest() {
+    console.log(`[Shazam-Middleware] Fim Request | Date: ${new Date().toLocaleString()}`);
+    
 }
