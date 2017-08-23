@@ -1,7 +1,7 @@
 const consign = require('consign');
 
 module.exports = (options) => {
-    console.log("[Shazam-Middleware] Handlers Activated");
+    console.log("[ShazaM] Handlers Activated");
 
     consign({
         verbose: false

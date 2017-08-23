@@ -4,7 +4,7 @@ let handlePromises = (options) => {
     process.on('unhandledRejection', (err, p) => {
         let date = new Date();
 
-        console.error(`[Shazam-Middleware] Promise Error | ${err.message}\nStack:\n${err.stack}`);
+        console.error(`[ShazaM] Promise Error | ${err.message}\nStack:\n${err.stack}`);
 
         if (options.slack) {
             let attachments =

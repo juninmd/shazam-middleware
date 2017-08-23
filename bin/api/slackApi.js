@@ -20,9 +20,9 @@ module.exports = (options, attachments) => {
 
     requestApi(paramters)
         .then(q => {
-            console.log(`[Shazam-Middleware] Notified on #channel ${options.slack.channel}`);
+            console.log(`[ShazaM] Notified on #channel ${options.slack.channel}`);
         })
         .catch(err => {
-            console.log(`[Shazam-Middleware] ${err}`);
+            console.log(`[ShazaM] ${err}`);
         });
 }

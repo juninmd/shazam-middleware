@@ -4,7 +4,7 @@ let handleGlobal = (options) => {
     process.on('uncaughtException', (err) => {
         let date = new Date();
 
-        console.error(`[Shazam-Middleware] Global Error | ${err.message}\nStack:\n${err.stack}`);
+        console.error(`[ShazaM] Global Error | ${err.message}\nStack:\n${err.stack}`);
 
         if (options.slack) {
             let attachments =

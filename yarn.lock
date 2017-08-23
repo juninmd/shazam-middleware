@@ -45,6 +45,10 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
+browser-detect@^0.2.18:
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/browser-detect/-/browser-detect-0.2.18.tgz#6626eb69688ed359b480903a73a4cb63e6ee5b2a"
+
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
