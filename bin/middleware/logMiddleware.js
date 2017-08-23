@@ -1,13 +1,16 @@
 const onFinished = require('on-finished')
+const ipUtil = require('../util/ipUtil');
+
+let mensagem = "";
 
 const logRequest = () => {
-    console.log(`[Shazam-Middleware] Fim Request | Date: ${new Date().toLocaleString()}`);
+    console.log(`${mensagem} | End: ${new Date().toLocaleString()}`);
 }
+
 module.exports = (options) => {
     return {
         log: (req, res, next) => {
-            console.log(`[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | Date: ${new Date().toLocaleString()} | IP: ${getip(req)}`);
-
+            mensagem = `[Shazam-Middleware] ${req.method} ${req.protocol + '://' + req.get('host') + req.originalUrl} | IP: ${ipUtil.getip(req)} | Start: ${new Date().toLocaleString()}`;
             onFinished(res, logRequest)
             next();
         }

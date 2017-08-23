@@ -1,7 +1,10 @@
+const exceptionMiddleware = require('./bin/middleware/exceptionMiddleware')
+const logMiddleware = require('./bin/middleware/logMiddleware.js')
+
 module.exports = (options) => {
     return {
-        exception: require('./exception')(options),
-        log: require('./log')(options),
+        exception: exceptionMiddleware(options).exception,
+        log: logMiddleware(options).log,
         handler: require('./handler')(options)
     }
 }

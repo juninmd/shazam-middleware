@@ -1,3 +1,5 @@
+const slackApi = require('../api/slackApi');
+
 let handlePromises = (options) => {
     process.on('unhandledRejection', (err, p) => {
         let date = new Date();
@@ -30,7 +32,7 @@ let handlePromises = (options) => {
                 attachments.pretext = "```" + err.stack + "```";
             }
 
-            sendSlack(options, [attachments]);
+            slackApi(options, [attachments]);
         }
     });
 }

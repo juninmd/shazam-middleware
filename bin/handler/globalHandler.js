@@ -1,3 +1,5 @@
+const slackApi = require('../api/slackApi');
+
 let handleGlobal = (options) => {
     process.on('uncaughtException', (err) => {
         let date = new Date();
