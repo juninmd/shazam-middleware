@@ -16,7 +16,7 @@ let handlePromises = (options) => {
                     fields: [
                         {
                             "title": "Error Type",
-                            "value": "Global Error",
+                            "value": "Promise Error",
                             "short": true
                         },
                         {
