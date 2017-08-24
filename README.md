@@ -7,7 +7,11 @@
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/juninmd/shazam-middleware.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
 ## What is shazam?
-* Shazam it's a `express` middleware to print on console of your application your requests. His difference is that it notify the slack channel when occurs errors.
+* Shazam it's a `express` middleware.
+
+## What he does?
+* HTTP request logger like `morgan` (Method, Status Code, Browser, IP)
+* Notify on slack channel when errors occurs.
 
 ## Requirements
 * [Node](https://nodejs.org/en/)
@@ -22,22 +26,29 @@ or
 yarn add shazam-middleware
 ```
 
-## I Recomend this patern on errors
+## Slack
+* Activate webhook on slack, to get your UrlHook :D
+* https://{yourslackname}.slack.com/apps/A0F7XDUAZ-incoming-webhooks
+* Doc:  https://api.slack.com/incoming-webhooks
+
+## Paramters Configuration
 ```js
-  app.get("/error/next", (req, res, next) => {
-        next({
-            message: {
-                userMessage: 'Hey, user! Don´t Worry',
-                developerMessage: 'Hey Man! This is bad'
-            },
-            statusCode: 500
-        });
-    })
+ slack: {
+        urlHook: '' // Url Hook of your slack,
+        channel: '' // Name of your channel (Without '#'),
+        iconUrl: '' // Customize the icon of bot (default: "http://dclegends.wiki/images/d/d9/Shazam_Billy_Batson_Portrait.png"),
+        botusername: '' // Customize the name of bot (default: Shazam)
+    },
+    api: {
+        name: '' // Name of your api,
+        version: '' // Version of your api
+    }
 ```
 
-## Code Example
+## Code example to do the Magic! (Automatic)
 ```js
 const app = require('express')();
+
 // Don't forget to configure the paramters
 const shazam = require('shazam-middleware')({
     slack: {
@@ -52,7 +63,7 @@ const shazam = require('shazam-middleware')({
     }
 });
 
-// Activate Validations on process `uncaughtException` and `unhandledRejection`
+// Activate validation on process `uncaughtException` and `unhandledRejection`
 shazam.handler;
 
 // Now, we wanna log all requests
@@ -64,20 +75,38 @@ app.get("/error", (req, res, next) => {
     res.status(200).send({ retorno: 'ok' })
 })
 
-// Now, we will look for all exceptions from routes
+// Now, we will look for all exceptions from ours routes
 app.use(shazam.exception);
 
+// Start the Server
 app.listen(4600, () => {
     console.log('APP WORKS http://localhost:4600')
 })
 
+// Fine! It`s All!
 ```
 
+## If you return a object like this patern, and use next(), you can trigger the message on Slack Channel.
+```js
+  app.get("/error/next", (req, res, next) => {
+        next({
+            message: {
+                userMessage: 'Hey, user! Don´t Worry',
+                developerMessage: 'Hey Man! This is bad'
+            },
+            statusCode: 500
+        });
+    })
+```
+## Example of error log
+![alt text](https://image.prntscr.com/image/uB86RZutR9O0fzM34J96HA.png "Log Exemple")
+
 ## Example of log
-![alt text](https://image.prntscr.com/image/3KmzXvsjQfC-6TfHrMwx1A.png "Log Exemple")
+![alt text](https://image.prntscr.com/image/O9pnCJetQJ6Tkob4H31mMQ.png "Log Exemple")
 
 ## Example of response
-![alt text](https://image.prntscr.com/image/ATA3JtYjSs6MzIsQKBSE2Q.png "Log Exemple")
+![alt text](https://image.prntscr.com/image/ECigRxeeTGC5g3V_MTfX6g.png "Log Exemple")
 
-## Example on Slack
-![alt text](https://image.prntscr.com/image/ATA3JtYjSs6MzIsQKBSE2Q.png "Log Exemple")
+## Examples on Slack
+![alt text](https://image.prntscr.com/image/fAmdzOYAQ1K1_93pmMnmKw.png "Log Exemple")
+![alt text](https://image.prntscr.com/image/wVrD6_aNRMSN79cefs9B1Q.png "Log Exemple")

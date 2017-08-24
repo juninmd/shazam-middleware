@@ -6,8 +6,8 @@ module.exports = (options) => {
             const date = new Date();
             console.error(`[ShazaM] Error: ${(err.message.developerMessage || err.message.userMessage || err.message)}`);
 
-            if (options.slack && (err.statusCode == null || err.statusCode === 500)) {
-                slackAttachment(err, req, date);
+            if (options.slack && (err.statusCode == null || err.statusCode >= 500 && err.statusCode <= 599)) {
+                slackAttachment(err, req, date, options);
             }
 
             res.status(req.statusCode || err.statusCode || 500).send({

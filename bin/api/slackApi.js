@@ -1,4 +1,4 @@
-const requestApi = require('./baseApi');
+const baseApi = require('./baseApi');
 
 module.exports = (options, attachments) => {
 
@@ -18,11 +18,11 @@ module.exports = (options, attachments) => {
         json: true
     };
 
-    requestApi(paramters)
+    baseApi.requestApi(paramters)
         .then(q => {
-            console.log(`[ShazaM] Notified on #channel ${options.slack.channel}`);
+            console.log(`[ShazaM] Notified on #${options.slack.channel}`);
         })
         .catch(err => {
-            console.log(`[ShazaM] ${err}`);
+            console.log(`[ShazaM] ${err.message.developerMessage}`);
         });
 }

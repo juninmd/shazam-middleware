@@ -1,7 +1,7 @@
 const slackApi = require('../api/slackApi');
 const browser = require('browser-detect');
 
-module.exports = (err, req, date) => {
+module.exports = (err, req, date, options) => {
     let browserN = browser(req.headers['user-agent']);
 
     let attachments =
@@ -14,12 +14,12 @@ module.exports = (err, req, date) => {
             fields: [
                 {
                     "title": "Error Type",
-                    "value": "Global",
+                    "value": "Route",
                     "short": true
                 },
                 {
                     "title": "Environment",
-                    "value": process.env.NODE_ENV,
+                    "value": process.env.NODE_ENV || 'Unknow',
                     "short": true
                 },
                 {
