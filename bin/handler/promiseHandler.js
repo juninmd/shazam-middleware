@@ -1,6 +1,6 @@
 const slackApi = require('../api/slackApi');
 
-let handlePromises = (options) => {
+module.exports = (options) => {
     process.on('unhandledRejection', (err, p) => {
         let date = new Date();
 

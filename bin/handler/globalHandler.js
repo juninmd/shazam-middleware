@@ -1,6 +1,7 @@
 const slackApi = require('../api/slackApi');
 
-let handleGlobal = (options) => {
+module.exports = (options) => {
+
     process.on('uncaughtException', (err) => {
         let date = new Date();
 
@@ -34,5 +35,6 @@ let handleGlobal = (options) => {
 
             sendSlack(options, [attachments]);
         }
+        process.exit(1);
     });
 }

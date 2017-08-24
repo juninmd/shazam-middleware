@@ -6,7 +6,6 @@
   "license": "MIT",
   "dependencies": {
     "browser-detect": "^0.2.18",
-    "consign": "^0.1.6",
     "on-finished": "^2.3.0",
     "request": "^2.81.0"
   }

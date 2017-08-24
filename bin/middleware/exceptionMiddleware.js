@@ -16,7 +16,7 @@ module.exports = (options) => {
                     userMessage: (err.message.userMessage || `An unexpected crash occurred by the application, but do not worry, it has already been automatically reported to developers.`),
                 },
                 details: {
-                    stack: err.stack || (err.message && err.message.developerMessage || '-- Without Stack --'),
+                    stack: err.stack || undefined,
                     route: `${req.method} - ${req.protocol + '://' + req.get('host') + req.originalUrl}`,
                     date: new Date()
                 },
