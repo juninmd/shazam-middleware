@@ -34,6 +34,5 @@ module.exports = (options) => {
 
             slackApi(options, [attachments]);
         }
-        process.exit(1);
     });
 }
