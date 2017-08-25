@@ -110,3 +110,7 @@ app.listen(4600, () => {
 ## Examples on Slack
 ![alt text](https://image.prntscr.com/image/fAmdzOYAQ1K1_93pmMnmKw.png "Log Exemple")
 ![alt text](https://image.prntscr.com/image/wVrD6_aNRMSN79cefs9B1Q.png "Log Exemple")
+
+## TODO
+* Check Lazy Requests
+* Save requests on database (mongo?)
