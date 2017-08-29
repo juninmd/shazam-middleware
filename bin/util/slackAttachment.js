@@ -6,7 +6,7 @@ module.exports = (err, req, date, options) => {
 
     let attachments =
         {
-            color: "#ff0000",
+            color: options.customize.color || "#ff0000",
             title: (err.message.developerMessage || err.message),
             title_link: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
             ts: Math.round(date.getTime() / 1000),
@@ -14,7 +14,7 @@ module.exports = (err, req, date, options) => {
             fields: [
                 {
                     "title": "Error Type",
-                    "value": "Route",
+                    "value": options.errorType,
                     "short": true
                 },
                 {

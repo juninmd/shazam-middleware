@@ -7,6 +7,10 @@ module.exports = (options) => {
             console.error(`[ShazaM] Error: ${(err.message.developerMessage || err.message.userMessage || err.message)}`);
 
             if (options.slack && (err.statusCode == null || err.statusCode >= 500 && err.statusCode <= 599)) {
+                options.customize = {
+                    errortype: "Route",
+                    color: 'yellow'
+                }
                 slackAttachment(err, req, date, options);
             }
 
