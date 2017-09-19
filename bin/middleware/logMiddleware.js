@@ -23,15 +23,15 @@ const dateDiff = (d) => {
 };
 
 const checkBrowser = (agent) => {
-
-    if (agent == undefined) {
+    let br = browser(agent);
+    if (agent == undefined || br.name == undefined) {
         return {
             mobile: false,
             name: '?',
             version: ''
         }
     }
-    
+
     if (agent.indexOf('PostmanRuntime') == 0) {
         let postman = agent.split('/')
         return {
@@ -40,7 +40,7 @@ const checkBrowser = (agent) => {
             version: postman[1]
         }
     }
-    return browser(agent);
+    return br;
 }
 const logRequest = (err, result) => {
     let t1 = process.hrtime(t0);

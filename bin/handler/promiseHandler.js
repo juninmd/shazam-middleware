@@ -21,7 +21,7 @@ module.exports = (options) => {
                         },
                         {
                             "title": "Environment",
-                            "value": (options.env.NODE_ENV || process.env.NODE_ENV),
+                            "value": (options.env != null ? options.env.NODE_ENV : null || process.env.NODE_ENV),
                             "short": true
                         }
                     ],
