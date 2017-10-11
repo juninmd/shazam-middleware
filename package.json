@@ -22,8 +22,8 @@
   ],
   "homepage": "https://github.com/juninmd/shazam-middleware#readme",
   "dependencies": {
-    "browser-detect": "^0.2.18",
-    "on-finished": "^2.3.0",
-    "request": "^2.81.0"
+    "browser-detect": "0.2.18",
+    "on-finished": "2.3.0",
+    "request": "2.83.0"
   }
 }
