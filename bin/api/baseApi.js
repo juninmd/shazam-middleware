@@ -1,55 +1,20 @@
 const request = require('request');
+let RequestMessage = require('./requestMessage.json')
 
-module.exports = {
-    requestApi: (options) => {
-        return new Promise((resolve, reject) => {
-            request(options, (error, response) => {
-                validateRequest(error, response, options, (result) => {
-                    if (result.statusCode >= 200 && result.statusCode <= 299) {
-                        return resolve(result.content);
-                    } else if (result.content) {
-                        return reject(result);
-                    }
-                    else {
-                        return reject({ message: { userMessage: "Nenhuma informação foi retornada da sua requisição!" } }, null);
-                    }
-                })
-            });
-        })
-    },
+const sendApiResponse = (statusCode, message, content, details) => {
+    RequestMessage.statusCode = statusCode;
+    RequestMessage.content = content;
+    RequestMessage.message = message;
+    if (details)
+        RequestMessage.details = details;
+    callback(RequestMessage);
+}
 
-};
-function validateRequest(error, response, options, callback) {
-    options.headers = {};
-    let RequestMessage = {
-        content: {},
-        message: {
-            developerMessage: '',
-            userMessage: ''
-        },
-        statusCode: 0
-    };
-
-    /**
-     * Método responsável pelo callback ao método invocador
-     * 
-     * @param {any} statusCode
-     * @param {any} message
-     * @param {any} content
-     */
-    function sendApiResponse(statusCode, message, content, details) {
-        RequestMessage.statusCode = statusCode;
-        RequestMessage.content = content;
-        RequestMessage.message = message;
-        if (details)
-            RequestMessage.details = details;
-        callback(RequestMessage);
-        return;
-    }
-
+const validateRequest = (error, response, options, callback) => {
     try {
+        options.headers = {};
         if (error) {
-            if (error.code == 'ECONNREFUSED') {
+            if (error.code === 'ECONNREFUSED') {
                 sendApiResponse(response.statusCode, {
                     developerMessage: `A conexão foi recusada pelo servidor ${error.address}:${error.port}, aparentemente está off-line.`,
                     userMessage: 'Não conseguimos nos comunicar com alguma Api, tente novamente.'
@@ -98,3 +63,23 @@ function validateRequest(error, response, options, callback) {
         }, err.message, { isSystemProblem: true });
     }
 }
+
+module.exports = {
+    requestApi: (options) => {
+        return new Promise((resolve, reject) => {
+            request(options, (error, response) => {
+                validateRequest(error, response, options, (result) => {
+                    if (result.statusCode >= 200 && result.statusCode <= 299) {
+                        return resolve(result.content);
+                    } else if (result.content) {
+                        return reject(result);
+                    }
+                    else {
+                        return reject({ message: { userMessage: "Nenhuma informação foi retornada da sua requisição!" } }, null);
+                    }
+                })
+            });
+        })
+    },
+
+};
