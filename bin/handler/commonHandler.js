@@ -1,5 +1,5 @@
 const slackApi = require('../api/slackApi');
-const funcAttachments = require('../util/slackCommonAttachment')
+const funcAttachments = require('../util/slackCommonAttachment');
 
 module.exports = (options, typeError, processName) => {
 

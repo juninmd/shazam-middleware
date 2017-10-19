@@ -1,14 +1,14 @@
 const request = require('request');
-let RequestMessage = require('./requestMessage.json')
+let RequestMessage = require('./requestMessage.json');
 
-const sendApiResponse = (statusCode, message, content, details) => {
+const sendApiResponse = (statusCode, message, content, details, callback) => {
     RequestMessage.statusCode = statusCode;
     RequestMessage.content = content;
     RequestMessage.message = message;
     if (details)
         RequestMessage.details = details;
     callback(RequestMessage);
-}
+};
 
 const validateRequest = (error, response, options, callback) => {
     try {
@@ -18,21 +18,21 @@ const validateRequest = (error, response, options, callback) => {
                 sendApiResponse(response.statusCode, {
                     developerMessage: `A conexão foi recusada pelo servidor ${error.address}:${error.port}, aparentemente está off-line.`,
                     userMessage: 'Não conseguimos nos comunicar com alguma Api, tente novamente.'
-                }, error, { isApiError: true });
+                }, error, { isApiError: true }, callback);
                 return;
             }
             else if (error.code !== 'ETIMEDOUT' && error.code !== 'ESOCKETTIMEDOUT') {
                 sendApiResponse(response.statusCode, {
                     developerMessage: 'Erro não esperado pelo sistema',
                     userMessage: 'Ocorreu alguma falha inesperada em alguma api, tente novamente'
-                }, typeof (error) == "object" ? error : { erro: 'error' }, { isApiError: true });
+                }, typeof (error) == "object" ? error : { erro: 'error' }, { isApiError: true }, callback);
                 return;
             }
             else {
                 sendApiResponse(response.statusCode, {
                     developerMessage: 'Time Out',
                     userMessage: 'Alguma api demorou mais do que o esperado para responder, tente novamente.'
-                }, null, { isApiError: true });
+                }, null, { isApiError: true }, callback);
                 return;
             }
         }
@@ -41,26 +41,26 @@ const validateRequest = (error, response, options, callback) => {
             sendApiResponse(response.statusCode, {
                 developerMessage: 'Falha inesperada',
                 userMessage: 'Erro na chamada de Api! Tente outra vez.'
-            }, null, { isApiError: true });
+            }, null, { isApiError: true }, callback);
             return;
         }
 
         if (response.statusCode == 200 && response.body == "ok") {
-            sendApiResponse(response.statusCode, {}, { sucesso: response.body });
+            sendApiResponse(response.statusCode, {}, { sucesso: response.body }, null, callback);
             return;
         }
 
         sendApiResponse(response.statusCode, {
             developerMessage: 'Falha inesperada',
             userMessage: 'Erro na chamada de Api! Tente outra vez.'
-        }, null, { isApiError: true });
+        }, null, { isApiError: true}, callback);
         return;
     }
     catch (err) {
         sendApiResponse(response.statusCode, {
             developerMessage: err.message,
             userMessage: 'Falha não tratada no sistema.'
-        }, err.message, { isSystemProblem: true });
+        }, err.message, { isSystemProblem: true }, callback);
     }
 }
 

@@ -28,4 +28,4 @@ module.exports = (err, options, errorType) => {
     }
 
     return attachments;
-}    
+};

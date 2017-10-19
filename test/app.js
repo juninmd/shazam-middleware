@@ -17,7 +17,7 @@ app.get('/undefined', (req, res, next) => {
 app.get('/promise', (req, res, next) => {
     return new Promise((resolve, reject) => {
         promiseError
-    })
+    });
 });
 
 app.listen(8272, () => {
