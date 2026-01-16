@@ -2,24 +2,24 @@ const onFinished = require('on-finished');
 const ipUtil = require('../util/ipUtil');
 const browser = require('browser-detect');
 
-let t0 = undefined;
+const dateDiff = (ms) => {
+    let seconds = Math.floor(ms / 1000);
+    let milliseconds = Math.floor(ms % 1000);
 
-const dateDiff = (d) => {
-    d = d / 1000;
-    let r = {};
-    let s = {
-        hour: 3600,
-        minute: 60,
-        second: 1,
-        ms: 0.001
-    };
+    let hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    let minutes = Math.floor(seconds / 60);
+    seconds %= 60;
 
-    Object.keys(s).forEach((key) => {
-        r[key] = Math.floor(d / s[key]);
-        d -= r[key] * s[key];
-    });
+    let parts = [];
+    if (hours > 0) parts.push(`${hours} hour(s)`);
+    if (minutes > 0) parts.push(`${minutes} minute(s)`);
+    if (seconds > 0) parts.push(`${seconds} second(s)`);
+    if (milliseconds > 0) parts.push(`${milliseconds} ms`);
 
-    return `${r.hour > 0 ? r.hour + " hour(s) " : ""}${r.minute > 0 ? r.minute + " minute(s) " : ""}${r.second > 0 ? r.second + " second(s) " : ""}${r.ms > 0 ? r.ms + " ms" : ""}`;
+    if (parts.length === 0) return "0 ms";
+
+    return parts.join(' ');
 };
 
 const checkBrowser = (agent) => {
@@ -44,8 +44,15 @@ const checkBrowser = (agent) => {
     return br;
 }
 const logRequest = (err, result) => {
-    let t1 = process.hrtime(t0);
-    let data = dateDiff((t1[0], t1[1] / 1000000).toString());
+    const startTime = result._shazamStartTime;
+    // Fallback if startTime is missing (should not happen)
+    if (!startTime) return;
+
+    let t1 = process.hrtime(startTime);
+    // Calculate ms: (seconds * 1000) + (nanoseconds / 1e6)
+    let ms = (t1[0] * 1000) + (t1[1] / 1e6);
+
+    let data = dateDiff(ms);
     let browserN = checkBrowser(result.req.headers['user-agent']);
     let message = `[ShazaM] ${result.req.method} | ${result.statusCode} | ${result.req.protocol + '://' + result.req.get('host') + result.req.originalUrl} | IP: ${ipUtil.getip(result.req)} | Response: ${data} | Browser: ${browserN.name} ${browserN.version}`;
     console.log(`${message}`);
@@ -54,10 +61,9 @@ const logRequest = (err, result) => {
 module.exports = (options) => {
     return {
         log: (req, res, next) => {
-            t0 = process.hrtime();
+            res._shazamStartTime = process.hrtime();
             onFinished(res, logRequest)
             next();
         }
     }
 }
-
