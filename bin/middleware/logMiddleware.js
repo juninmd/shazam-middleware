@@ -23,8 +23,8 @@ const dateDiff = (ms) => {
 };
 
 const checkBrowser = (agent) => {
-    let br = browser(agent);
-    if (agent == undefined || br.name == undefined) {
+    // Optimization: Early return to avoid expensive browser-detect call
+    if (!agent) {
         return {
             mobile: false,
             name: '?',
@@ -32,14 +32,23 @@ const checkBrowser = (agent) => {
         }
     }
 
-    if (agent.indexOf('PostmanRuntime') == 0) {
+    // Optimization: Handle Postman explicitly before parsing
+    if (agent.indexOf('PostmanRuntime') === 0) {
         let postman = agent.split('/');
         return {
             mobile: false,
             name: postman[0],
             version: postman[1]
         }
-        
+    }
+
+    let br = browser(agent);
+    if (br.name == undefined) {
+        return {
+            mobile: false,
+            name: '?',
+            version: ''
+        }
     }
     return br;
 }
