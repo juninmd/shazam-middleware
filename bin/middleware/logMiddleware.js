@@ -2,6 +2,10 @@ const onFinished = require('on-finished');
 const ipUtil = require('../util/ipUtil');
 const browser = require('browser-detect');
 
+// LRU Cache simulation (simple limit)
+const CACHE_LIMIT = 5000;
+const uaCache = new Map();
+
 const dateDiff = (ms) => {
     let seconds = Math.floor(ms / 1000);
     let milliseconds = Math.floor(ms % 1000);
@@ -32,24 +36,38 @@ const checkBrowser = (agent) => {
         }
     }
 
+    // Optimization: Check cache first
+    if (uaCache.has(agent)) {
+        return uaCache.get(agent);
+    }
+
     // Optimization: Handle Postman explicitly before parsing
     if (agent.indexOf('PostmanRuntime') === 0) {
         let postman = agent.split('/');
-        return {
+        const result = {
             mobile: false,
             name: postman[0],
             version: postman[1]
-        }
+        };
+        // Update cache
+        if (uaCache.size >= CACHE_LIMIT) uaCache.clear();
+        uaCache.set(agent, result);
+        return result;
     }
 
     let br = browser(agent);
     if (br.name == undefined) {
-        return {
+        br = {
             mobile: false,
             name: '?',
             version: ''
-        }
+        };
     }
+
+    // Update cache
+    if (uaCache.size >= CACHE_LIMIT) uaCache.clear();
+    uaCache.set(agent, br);
+
     return br;
 }
 const logRequest = (err, result) => {
