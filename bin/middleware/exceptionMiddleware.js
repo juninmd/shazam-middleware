@@ -1,4 +1,6 @@
 const slackAttachment = require('../util/slackAttachment');
+const telegramAttachment = require('../util/telegramAttachment');
+const discordAttachment = require('../util/discordAttachment');
 
 const sendResult = (err, req, res, next) => {
     res.status(req.statusCode || err.statusCode || 500).send({
@@ -24,12 +26,20 @@ module.exports = (options) => {
 
             options.typeError = `Common Error`;
 
-            if (options.slack && (err.statusCode == null || err.statusCode >= 500 && err.statusCode <= 599)) {
+            if ((options.slack || options.telegram || options.discord) && (err.statusCode == null || err.statusCode >= 500 && err.statusCode <= 599)) {
                 options.customize = {
                     errortype: "Route",
-                    color: 'yellow'
+                    color: '#FFFF00'
                 }
-                slackAttachment(err, req, date, options);
+
+                if (options.slack)
+                    slackAttachment(err, req, date, options);
+
+                if (options.telegram)
+                    telegramAttachment(err, req, date, options);
+
+                if (options.discord)
+                    discordAttachment(err, req, date, options);
             }
 
             sendResult(err, req, res, next);
