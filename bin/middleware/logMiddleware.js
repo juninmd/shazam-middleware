@@ -38,7 +38,11 @@ const checkBrowser = (agent) => {
 
     // Optimization: Check cache first
     if (uaCache.has(agent)) {
-        return uaCache.get(agent);
+        const result = uaCache.get(agent);
+        // Refresh LRU
+        uaCache.delete(agent);
+        uaCache.set(agent, result);
+        return result;
     }
 
     // Optimization: Handle Postman explicitly before parsing
@@ -49,8 +53,10 @@ const checkBrowser = (agent) => {
             name: postman[0],
             version: postman[1]
         };
-        // Update cache
-        if (uaCache.size >= CACHE_LIMIT) uaCache.clear();
+        // Update cache (LRU eviction)
+        if (uaCache.size >= CACHE_LIMIT) {
+            uaCache.delete(uaCache.keys().next().value);
+        }
         uaCache.set(agent, result);
         return result;
     }
@@ -64,8 +70,10 @@ const checkBrowser = (agent) => {
         };
     }
 
-    // Update cache
-    if (uaCache.size >= CACHE_LIMIT) uaCache.clear();
+    // Update cache (LRU eviction)
+    if (uaCache.size >= CACHE_LIMIT) {
+        uaCache.delete(uaCache.keys().next().value);
+    }
     uaCache.set(agent, br);
 
     return br;

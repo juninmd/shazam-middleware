@@ -13,3 +13,7 @@
 ## 2024-05-27 - [Caching Repeated User-Agents]
 **Learning:** Even with guard clauses, repeated calls to `browser-detect` for standard User-Agents (e.g., Chrome, Firefox) remain expensive (~0.05ms per call) and can consume significant CPU under load.
 **Action:** Implement an LRU-like cache (Map) for User-Agent parsing results. Since User-Agent strings are repetitive and finite in practice, this reduces parsing cost to near-zero (~20x speedup) for 99% of requests.
+
+## 2024-05-28 - [Cache Thrashing in Simple Map Cache]
+**Learning:** Using `map.clear()` when a cache reaches its limit causes a "performance cliff" where all subsequent requests miss the cache until it refills. This negates the benefit of caching for high-traffic environments with diverse clients.
+**Action:** Implement true LRU eviction by deleting the oldest key (`map.keys().next().value`) when the limit is reached, and re-inserting keys on access to refresh their position.
