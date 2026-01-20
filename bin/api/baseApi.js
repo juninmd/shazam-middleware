@@ -1,13 +1,16 @@
 const request = require('request');
-let RequestMessage = require('./requestMessage.json');
 
 const sendApiResponse = (statusCode, message, content, details, callback) => {
-    RequestMessage.statusCode = statusCode;
-    RequestMessage.content = content;
-    RequestMessage.message = message;
+    const response = {
+        statusCode: statusCode,
+        content: content,
+        message: message
+    };
+
     if (details)
-        RequestMessage.details = details;
-    callback(RequestMessage);
+        response.details = details;
+
+    callback(response);
 };
 
 const validateRequest = (error, response, options, callback) => {

@@ -7,6 +7,9 @@ const CACHE_LIMIT = 5000;
 const uaCache = new Map();
 
 const dateDiff = (ms) => {
+    // Optimization: fast path for sub-second responses
+    if (ms < 1000) return `${Math.floor(ms)} ms`;
+
     let seconds = Math.floor(ms / 1000);
     let milliseconds = Math.floor(ms % 1000);
 
