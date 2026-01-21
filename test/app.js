@@ -20,8 +20,10 @@ app.get('/promise', (req, res, next) => {
     }).catch(next);
 });
 
-app.listen(8272, () => {
-    console.log("Aplicação Rodando");
-});
+if (require.main === module) {
+    app.listen(8272, () => {
+        console.log("Aplicação Rodando");
+    });
+}
 
 module.exports = app;

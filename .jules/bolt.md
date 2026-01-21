@@ -17,3 +17,7 @@
 ## 2024-05-28 - [Cache Thrashing in Simple Map Cache]
 **Learning:** Using `map.clear()` when a cache reaches its limit causes a "performance cliff" where all subsequent requests miss the cache until it refills. This negates the benefit of caching for high-traffic environments with diverse clients.
 **Action:** Implement true LRU eviction by deleting the oldest key (`map.keys().next().value`) when the limit is reached, and re-inserting keys on access to refresh their position.
+
+## 2024-05-30 - [Bypassed Optimizations in Error Handling]
+**Learning:** Performance optimizations (like User-Agent caching) implemented in one module (middleware) were bypassed by other modules (error handlers) that duplicated the expensive logic. This caused the "optimized" path to be ignored during critical failures, potentially worsening the impact of errors.
+**Action:** Extract expensive logic (like regex parsing) into shared, cached utilities so that all parts of the application benefit from the optimization, ensuring consistent performance even in edge cases.
