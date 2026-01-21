@@ -1,8 +1,8 @@
 const slackApi = require('../api/slackApi');
-const browser = require('browser-detect');
+const checkBrowser = require('../util/userAgentUtil');
 
 module.exports = (err, req, date, options) => {
-    let browserN = browser(req.headers['user-agent']);
+    let browserN = checkBrowser(req.headers['user-agent']);
 
     let attachments =
         {

@@ -13,7 +13,7 @@
     "url": "https://github.com/juninmd/shazam-middleware/issues"
   },
   "scripts": {
-    "test": ".\\node_modules\\.bin\\mocha ./test/testApp"
+    "test": "mocha ./test/testApp"
   },
   "keywords": [
     "middleware",
