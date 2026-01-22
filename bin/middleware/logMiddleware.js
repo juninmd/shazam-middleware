@@ -35,7 +35,7 @@ const logRequest = (err, result) => {
     let ms = (t1[0] * 1000) + (t1[1] / 1e6);
 
     let data = dateDiff(ms);
-    let browserN = checkBrowser(result.req.headers['user-agent']);
+    let browserN = result.req._browserInfo || checkBrowser(result.req.headers['user-agent']);
     let message = `[ShazaM] ${result.req.method} | ${result.statusCode} | ${result.req.protocol + '://' + result.req.get('host') + result.req.originalUrl} | IP: ${ipUtil.getip(result.req)} | Response: ${data} | Browser: ${browserN.name} ${browserN.version}`;
     console.log(`${message}`);
 }

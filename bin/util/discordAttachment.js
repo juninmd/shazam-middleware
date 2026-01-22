@@ -2,7 +2,7 @@ const discordApi = require('../api/discordApi');
 const checkBrowser = require('../util/userAgentUtil');
 
 module.exports = (err, req, date, options) => {
-    let browserN = checkBrowser(req.headers['user-agent']);
+    let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
 
     let embed = {
         title: err.message.developerMessage || err.message,
