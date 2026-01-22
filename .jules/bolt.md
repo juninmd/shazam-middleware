@@ -21,3 +21,7 @@
 ## 2024-05-30 - [Bypassed Optimizations in Error Handling]
 **Learning:** Performance optimizations (like User-Agent caching) implemented in one module (middleware) were bypassed by other modules (error handlers) that duplicated the expensive logic. This caused the "optimized" path to be ignored during critical failures, potentially worsening the impact of errors.
 **Action:** Extract expensive logic (like regex parsing) into shared, cached utilities so that all parts of the application benefit from the optimization, ensuring consistent performance even in edge cases.
+
+## 2024-06-03 - [Request-Scoped Memoization for User-Agent Parsing]
+**Learning:** Redundant calls to expensive functions (like `browser-detect`) can occur across different middleware layers (logging, error handling) for the same request.
+**Action:** Compute the value once (e.g., in the first middleware that needs it) and attach it to the request object (memoization) for subsequent consumers to use, avoiding repetitive cache lookups or re-computation.
