@@ -1,8 +1,10 @@
 const telegramApi = require('../api/telegramApi');
 
+const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
+
 module.exports = (err, options, errorType) => {
     const escape = (text) => {
-        return (text || '').toString().replace(/[_*[\]()~>#\+\-=|{}.!]/g, '\\$&');
+        return (text || '').toString().replace(ESCAPE_REGEX, '\\$&');
     }
 
     let message = `*${escape(err.message)}*\n\n`;
