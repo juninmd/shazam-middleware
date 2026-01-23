@@ -1,11 +1,13 @@
 const telegramApi = require('../api/telegramApi');
 const checkBrowser = require('../util/userAgentUtil');
 
+const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
+
 module.exports = (err, req, date, options) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
 
     const escape = (text) => {
-        return (text || '').toString().replace(/[_*[\]()~>#\+\-=|{}.!]/g, '\\$&');
+        return (text || '').toString().replace(ESCAPE_REGEX, '\\$&');
     }
 
     let message = `*${escape(err.message.developerMessage || err.message)}*\n\n`;
