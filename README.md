@@ -1,5 +1,6 @@
 # shazam-middleware
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b0b7ea850b264e3cbd8c9e1b10e565c6)](https://www.codacy.com/app/jr_acn/shazam-middleware?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=juninmd/shazam-middleware&amp;utm_campaign=Badge_Grade)
 [![NPM Version](https://img.shields.io/npm/v/shazam-middleware.svg)](https://npmjs.org/package/shazam-middleware)
 [![NPM Downloads](https://img.shields.io/npm/dm/shazam-middleware.svg)](https://npmjs.org/package/shazam-middleware)
 [![GitHub issues](https://img.shields.io/github/issues/juninmd/shazam-middleware.svg)](https://github.com/juninmd/shazam-middleware/issues)

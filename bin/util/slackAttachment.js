@@ -1,14 +1,15 @@
 const slackApi = require('../api/slackApi');
-const browser = require('browser-detect');
+const checkBrowser = require('../util/userAgentUtil');
 
 module.exports = (err, req, date, options) => {
-    let browserN = browser(req.headers['user-agent']);
+    let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
 
     let attachments =
         {
             color: options.customize.color || "#ff0000",
             title: (err.message.developerMessage || err.message),
-            title_link: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+            // Optimization: req.headers['host'] is ~20x faster than req.get('host')
+            title_link: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
             ts: Math.round(date.getTime() / 1000),
             mrkdwn_in: ["text", "pretext", "title"],
             fields: [

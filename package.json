@@ -1,6 +1,6 @@
 {
   "name": "shazam-middleware",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Shazam it's a express middleware to print on console of your application. His difference is that it notify the slack channel when occurs errors.",
   "main": "app.js",
   "license": "MIT",
@@ -12,6 +12,9 @@
   "bugs": {
     "url": "https://github.com/juninmd/shazam-middleware/issues"
   },
+  "scripts": {
+    "test": "mocha ./test/testApp"
+  },
   "keywords": [
     "middleware",
     "express",
@@ -22,8 +25,13 @@
   ],
   "homepage": "https://github.com/juninmd/shazam-middleware#readme",
   "dependencies": {
-    "browser-detect": "0.2.18",
-    "on-finished": "2.3.0",
-    "request": "2.83.0"
+    "browser-detect": "^0.2.18",
+    "on-finished": "^2.3.0",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "express": "^4.16.2",
+    "mocha": "^4.0.1",
+    "supertest": "^3.0.0"
   }
 }

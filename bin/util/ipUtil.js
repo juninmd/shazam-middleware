@@ -5,4 +5,4 @@ module.exports = {
             (req.connection && req.connection.remoteAddress) ||
             undefined
     }
-}
+};

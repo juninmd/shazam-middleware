@@ -1,6 +1,8 @@
+const commonHandler = require('./bin/handler/commonHandler');
+
 module.exports = (options) => {
     console.log("[ShazaM] Handlers Activated");
 
-    require('./bin/handler/globalHandler')(options);
-    require('./bin/handler/promiseHandler')(options);
+    commonHandler(options, 'Global Error', 'uncaughtException');
+    commonHandler(options, 'Promise Error', 'unhandledRejection');
 };
