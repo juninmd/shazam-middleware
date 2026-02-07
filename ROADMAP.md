@@ -1,9 +1,9 @@
 # ROADMAP.md - Task Backlog
 
 ## 🚨 High Priority (Immediate)
-- [ ] **Infrastructure:** Migrate to `pnpm` (Remove `yarn.lock`, `package-lock.json`).
+- [x] **Infrastructure:** Migrate to `pnpm` (Remove `yarn.lock`, `package-lock.json`).
 - [ ] **Security:** Replace deprecated `request` library with `axios` or `fetch`.
-- [ ] **Documentation:** Add JSDoc to `bin/api/baseApi.js`.
+- [x] **Documentation:** Add JSDoc to `bin/api/baseApi.js`.
 
 ## ⚠️ Medium Priority
 - [ ] **Testing:** Increase test coverage (currently minimal).
