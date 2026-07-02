@@ -1,9 +1,10 @@
-const slackAttachment = require('../util/slackAttachment');
-const telegramAttachment = require('../util/telegramAttachment');
-const discordAttachment = require('../util/discordAttachment');
-const checkBrowser = require('../util/userAgentUtil');
+import slackAttachment from '../util/slackAttachment';
+import telegramAttachment from '../util/telegramAttachment';
+import discordAttachment from '../util/discordAttachment';
+import checkBrowser from '../util/userAgentUtil';
+import { Response, NextFunction } from 'express';
 
-const sendResult = (err, req, res, next) => {
+const sendResult = (err: any, req: any, res: Response, next: NextFunction) => {
     res.status(req.statusCode || err.statusCode || 500).send({
         message: {
             developerMessage: (err.message.developerMessage || err.message),
@@ -11,24 +12,21 @@ const sendResult = (err, req, res, next) => {
         },
         details: {
             stack: err.stack || undefined,
-            // Optimization: req.headers['host'] is ~20x faster than req.get('host')
             route: `${req.method} - ${req.protocol + '://' + req.headers['host'] + req.originalUrl}`,
             date: new Date()
         },
         statusCode: (req.statusCode || err.statusCode || 500),
     });
-}
+};
 
-
-module.exports = (options) => {
+const exceptionMiddleware = (options: any) => {
     return {
-        exception: (err, req, res, next) => {
+        exception: (err: any, req: any, res: Response, next: NextFunction) => {
             const date = new Date();
             console.error(`[ShazaM] Common Error: ${(err.message.developerMessage || err.message.userMessage || err.message)}`);
 
             options.typeError = `Common Error`;
 
-            // Optimization: Parse user agent once and cache on request object to avoid redundant calls
             if (req && req.headers && !req._browserInfo) {
                 req._browserInfo = checkBrowser(req.headers['user-agent']);
             }
@@ -37,7 +35,7 @@ module.exports = (options) => {
                 options.customize = {
                     errortype: "Route",
                     color: '#FFFF00'
-                }
+                };
 
                 if (options.slack)
                     slackAttachment(err, req, date, options);
@@ -51,5 +49,7 @@ module.exports = (options) => {
 
             sendResult(err, req, res, next);
         }
-    }
-}
+    };
+};
+
+export default exceptionMiddleware;

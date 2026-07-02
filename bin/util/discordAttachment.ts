@@ -1,12 +1,11 @@
-const discordApi = require('../api/discordApi');
-const checkBrowser = require('../util/userAgentUtil');
+import discordApi from '../api/discordApi';
+import checkBrowser from '../util/userAgentUtil';
 
-module.exports = (err, req, date, options) => {
+const discordAttachment = (err: any, req: any, date: Date, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
 
-    let embed = {
+    let embed: any = {
         title: err.message.developerMessage || err.message,
-        // Optimization: req.headers['host'] is ~20x faster than req.get('host')
         url: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
         color: parseInt((options.customize.color || "#ff0000").replace('#', ''), 16),
         timestamp: date.toISOString(),
@@ -49,4 +48,6 @@ module.exports = (err, req, date, options) => {
     }
 
     discordApi(options, { embeds: [embed] });
-}
+};
+
+export default discordAttachment;

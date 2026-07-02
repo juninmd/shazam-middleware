@@ -1,29 +1,24 @@
-const browser = require('browser-detect');
+import browser from 'browser-detect';
 
-// LRU Cache simulation (simple limit)
 const CACHE_LIMIT = 5000;
-const uaCache = new Map();
+const uaCache = new Map<string, any>();
 
-const checkBrowser = (agent) => {
-    // Optimization: Early return to avoid expensive browser-detect call
+const checkBrowser = (agent: string | undefined): any => {
     if (!agent) {
         return {
             mobile: false,
             name: '?',
             version: ''
-        }
+        };
     }
 
-    // Optimization: Check cache first
     if (uaCache.has(agent)) {
         const result = uaCache.get(agent);
-        // Refresh LRU
         uaCache.delete(agent);
         uaCache.set(agent, result);
         return result;
     }
 
-    // Optimization: Handle Postman explicitly before parsing
     if (agent.indexOf('PostmanRuntime') === 0) {
         let postman = agent.split('/');
         const result = {
@@ -31,7 +26,6 @@ const checkBrowser = (agent) => {
             name: postman[0],
             version: postman[1]
         };
-        // Update cache (LRU eviction)
         if (uaCache.size >= CACHE_LIMIT) {
             uaCache.delete(uaCache.keys().next().value);
         }
@@ -48,13 +42,12 @@ const checkBrowser = (agent) => {
         };
     }
 
-    // Update cache (LRU eviction)
     if (uaCache.size >= CACHE_LIMIT) {
         uaCache.delete(uaCache.keys().next().value);
     }
     uaCache.set(agent, br);
 
     return br;
-}
+};
 
-module.exports = checkBrowser;
+export default checkBrowser;

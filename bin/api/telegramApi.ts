@@ -1,7 +1,6 @@
-const baseApi = require('./baseApi');
+import * as baseApi from './baseApi';
 
-module.exports = (options, content) => {
-
+const telegramApi = (options: any, content: string) => {
     let parameters = {
         url: `https://api.telegram.org/bot${options.telegram.botToken}/sendMessage`,
         method: 'POST',
@@ -24,3 +23,5 @@ module.exports = (options, content) => {
             console.error(`[ShazaM] Telegram Error: ${err.message && err.message.developerMessage || err}`);
         });
 };
+
+export default telegramApi;

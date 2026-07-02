@@ -1,8 +1,7 @@
-const baseApi = require('./baseApi');
+import * as baseApi from './baseApi';
 
-module.exports = (options, attachments) => {
-
-    let paramters = {
+const slackApi = (options: any, attachments: any[]) => {
+    let parameters = {
         url: options.slack.urlHook,
         method: 'POST',
         body: {
@@ -18,7 +17,7 @@ module.exports = (options, attachments) => {
         json: true
     };
 
-    baseApi.requestApi(paramters)
+    baseApi.requestApi(parameters)
         .then((q) => {
             console.log(`[ShazaM] Notified on #${options.slack.channel}`);
         })
@@ -26,3 +25,5 @@ module.exports = (options, attachments) => {
             console.log(`[ShazaM] ${err.message.developerMessage}`);
         });
 };
+
+export default slackApi;

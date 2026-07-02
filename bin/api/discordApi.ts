@@ -1,8 +1,7 @@
-const baseApi = require('./baseApi');
+import * as baseApi from './baseApi';
 
-module.exports = (options, content) => {
-
-    let parameters = {
+const discordApi = (options: any, content: any) => {
+    let parameters: any = {
         url: options.discord.webhookUrl,
         method: 'POST',
         body: content,
@@ -27,3 +26,5 @@ module.exports = (options, content) => {
             console.error(`[ShazaM] Discord Error: ${err.message && err.message.developerMessage || err}`);
         });
 };
+
+export default discordApi;

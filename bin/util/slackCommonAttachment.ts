@@ -1,9 +1,7 @@
-const slackApi = require('../api/slackApi');
-
-module.exports = (err, options, errorType) => {
+const slackCommonAttachment = (err: any, options: any, errorType: string) => {
     let date = new Date();
 
-    let attachments = {
+    let attachments: any = {
         color: "#ff0000",
         title: err.message,
         ts: Math.round(date.getTime() / 1000),
@@ -20,7 +18,6 @@ module.exports = (err, options, errorType) => {
                 "short": true
             }
         ],
-
     };
 
     if (err.stack) {
@@ -29,3 +26,5 @@ module.exports = (err, options, errorType) => {
 
     return attachments;
 };
+
+export default slackCommonAttachment;

@@ -1,17 +1,16 @@
-const telegramApi = require('../api/telegramApi');
-const checkBrowser = require('../util/userAgentUtil');
+import telegramApi from '../api/telegramApi';
+import checkBrowser from '../util/userAgentUtil';
 
 const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
 
-module.exports = (err, req, date, options) => {
+const telegramAttachment = (err: any, req: any, date: Date, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
 
-    const escape = (text) => {
+    const escape = (text: any) => {
         return (text || '').toString().replace(ESCAPE_REGEX, '\\$&');
-    }
+    };
 
     let message = `*${escape(err.message.developerMessage || err.message)}*\n\n`;
-    // Optimization: req.headers['host'] is ~20x faster than req.get('host')
     message += `*Link:* ${escape(`${req.protocol}://${req.headers['host']}${req.originalUrl}`)}\n`;
     message += `*Error Type:* ${escape(options.errorType)}\n`;
     message += `*Environment:* ${escape(process.env.NODE_ENV || 'Unknown')}\n`;
@@ -26,4 +25,6 @@ module.exports = (err, req, date, options) => {
     }
 
     telegramApi(options, message);
-}
+};
+
+export default telegramAttachment;

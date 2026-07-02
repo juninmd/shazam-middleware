@@ -1,17 +1,14 @@
-const slackApi = require('../api/slackApi');
-const funcAttachments = require('../util/slackCommonAttachment');
-const telegramCommonAttachment = require('../util/telegramCommonAttachment');
-const discordCommonAttachment = require('../util/discordCommonAttachment');
+import slackApi from '../api/slackApi';
+import funcAttachments from '../util/slackCommonAttachment';
+import telegramCommonAttachment from '../util/telegramCommonAttachment';
+import discordCommonAttachment from '../util/discordCommonAttachment';
 
-module.exports = (options, typeError, processName) => {
-
-    process.on(processName, (err) => {
-
+const commonHandler = (options: any, typeError: string, processName: any) => {
+    process.on(processName, (err: any) => {
         console.error(`[ShazaM] ${typeError} | ${err.message}\nStack:\n${err.stack}`);
 
         if (options.slack) {
             let attachments = funcAttachments(err, options, typeError);
-
             slackApi(options, [attachments]);
         }
 
@@ -24,3 +21,5 @@ module.exports = (options, typeError, processName) => {
         }
     });
 };
+
+export default commonHandler;

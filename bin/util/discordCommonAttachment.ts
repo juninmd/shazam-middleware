@@ -1,9 +1,9 @@
-const discordApi = require('../api/discordApi');
+import discordApi from '../api/discordApi';
 
-module.exports = (err, options, errorType) => {
+const discordCommonAttachment = (err: any, options: any, errorType: string) => {
     let date = new Date();
 
-    let embed = {
+    let embed: any = {
         title: err.message,
         color: 16711680, // Red
         timestamp: date.toISOString(),
@@ -19,7 +19,6 @@ module.exports = (err, options, errorType) => {
                 inline: true
             }
         ],
-
     };
 
     if (err.stack) {
@@ -28,3 +27,5 @@ module.exports = (err, options, errorType) => {
 
     discordApi(options, { embeds: [embed] });
 };
+
+export default discordCommonAttachment;
