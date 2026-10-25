@@ -1,12 +1,14 @@
 import slackApi from '../api/slackApi';
 import checkBrowser from '../util/userAgentUtil';
+import normalizeError from '../util/normalizeError';
 
 const slackAttachment = (err: any, req: any, date: Date, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
+    const normalized = normalizeError(err);
 
     let attachments: any = {
-        color: options.customize.color || "#ff0000",
-        title: (err.message.developerMessage || err.message),
+        color: options.customize?.color || "#ff0000",
+        title: normalized.developerMessage,
         title_link: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
         ts: Math.round(date.getTime() / 1000),
         mrkdwn_in: ["text", "pretext", "title"],
@@ -44,8 +46,8 @@ const slackAttachment = (err: any, req: any, date: Date, options: any) => {
         ],
     };
 
-    if (err.stack) {
-        attachments.pretext = "```" + err.stack + "```";
+    if (normalized.stack) {
+        attachments.pretext = "```" + normalized.stack + "```";
     }
 
     slackApi(options, [attachments]);
