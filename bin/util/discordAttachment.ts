@@ -1,13 +1,15 @@
 import discordApi from '../api/discordApi';
 import checkBrowser from '../util/userAgentUtil';
+import normalizeError from '../util/normalizeError';
 
 const discordAttachment = (err: any, req: any, date: Date, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
+    const normalized = normalizeError(err);
 
     let embed: any = {
-        title: err.message.developerMessage || err.message,
+        title: normalized.developerMessage,
         url: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
-        color: parseInt((options.customize.color || "#ff0000").replace('#', ''), 16),
+        color: parseInt((options.customize?.color || "#ff0000").replace('#', ''), 16),
         timestamp: date.toISOString(),
         fields: [
             {
@@ -43,8 +45,8 @@ const discordAttachment = (err: any, req: any, date: Date, options: any) => {
         ],
     };
 
-    if (err.stack) {
-        embed.description = "```" + err.stack + "```";
+    if (normalized.stack) {
+        embed.description = "```" + normalized.stack + "```";
     }
 
     discordApi(options, { embeds: [embed] });
