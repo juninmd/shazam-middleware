@@ -2,12 +2,12 @@ import slackApi from '../api/slackApi';
 import checkBrowser from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
 
-const slackAttachment = (err: any, req: any, date: Date, options: any) => {
+const slackAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
     const normalized = normalizeError(err);
 
     let attachments: any = {
-        color: options.customize?.color || "#ff0000",
+        color: meta.color || "#ff0000",
         title: normalized.developerMessage,
         title_link: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
         ts: Math.round(date.getTime() / 1000),
@@ -15,7 +15,7 @@ const slackAttachment = (err: any, req: any, date: Date, options: any) => {
         fields: [
             {
                 "title": "Error Type",
-                "value": options.errorType,
+                "value": meta.errorType || "Unknown",
                 "short": true
             },
             {

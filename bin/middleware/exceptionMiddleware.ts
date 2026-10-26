@@ -28,26 +28,21 @@ const exceptionMiddleware = (options: any) => {
             const date = new Date();
             console.error(`[ShazaM] Common Error: ${normalized.developerMessage}`);
 
-            options.typeError = `Common Error`;
-
             if (req && req.headers && !req._browserInfo) {
                 req._browserInfo = checkBrowser(req.headers['user-agent']);
             }
 
             if ((options.slack || options.telegram || options.discord) && (normalized.statusCode >= 500 && normalized.statusCode <= 599)) {
-                options.customize = {
-                    errortype: "Route",
-                    color: '#FFFF00'
-                };
+                const meta = { errorType: 'Route', color: '#FFFF00' };
 
                 if (options.slack)
-                    slackAttachment(err, req, date, options);
+                    slackAttachment(err, req, date, meta, options);
 
                 if (options.telegram)
-                    telegramAttachment(err, req, date, options);
+                    telegramAttachment(err, req, date, meta, options);
 
                 if (options.discord)
-                    discordAttachment(err, req, date, options);
+                    discordAttachment(err, req, date, meta, options);
             }
 
             if (res.headersSent) {
