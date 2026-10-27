@@ -4,7 +4,7 @@ import normalizeError from '../util/normalizeError';
 
 const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
 
-const telegramAttachment = (err: any, req: any, date: Date, options: any) => {
+const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
     const normalized = normalizeError(err);
 
@@ -14,7 +14,7 @@ const telegramAttachment = (err: any, req: any, date: Date, options: any) => {
 
     let message = `*${escape(normalized.developerMessage)}*\n\n`;
     message += `*Link:* ${escape(`${req.protocol}://${req.headers['host']}${req.originalUrl}`)}\n`;
-    message += `*Error Type:* ${escape(options.errorType)}\n`;
+    message += `*Error Type:* ${escape(meta.errorType || 'Unknown')}\n`;
     message += `*Environment:* ${escape(process.env.NODE_ENV || 'Unknown')}\n`;
     message += `*Agent:* ${escape(`${browserN.name} ${browserN.version || 'Unknown'}`)}\n`;
     message += `*O.S.:* ${escape(browserN.os || 'Unknown')}\n`;
