@@ -1,10 +1,11 @@
 import discordApi from '../api/discordApi';
+import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate';
 
 const discordCommonAttachment = (err: any, options: any, errorType: string) => {
     let date = new Date();
 
     let embed: any = {
-        title: err.message,
+        title: truncate(String(err.message), DISCORD_MAX_TITLE),
         color: 16711680, // Red
         timestamp: date.toISOString(),
         fields: [
@@ -22,7 +23,7 @@ const discordCommonAttachment = (err: any, options: any, errorType: string) => {
     };
 
     if (err.stack) {
-        embed.description = "```" + err.stack + "```";
+        embed.description = "```" + truncate(String(err.stack), DISCORD_MAX_DESCRIPTION - 6) + "```";
     }
 
     discordApi(options, { embeds: [embed] });

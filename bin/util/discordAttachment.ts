@@ -1,13 +1,14 @@
 import discordApi from '../api/discordApi';
 import checkBrowser from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
+import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate';
 
 const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
     const normalized = normalizeError(err);
 
     let embed: any = {
-        title: normalized.developerMessage,
+        title: truncate(normalized.developerMessage, DISCORD_MAX_TITLE),
         url: `${req.protocol}://${req.headers['host']}${req.originalUrl}`,
         color: parseInt((meta.color || "#ff0000").replace('#', ''), 16),
         timestamp: date.toISOString(),
@@ -46,7 +47,7 @@ const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: s
     };
 
     if (normalized.stack) {
-        embed.description = "```" + normalized.stack + "```";
+        embed.description = "```" + truncate(normalized.stack, DISCORD_MAX_DESCRIPTION - 6) + "```";
     }
 
     discordApi(options, { embeds: [embed] });
