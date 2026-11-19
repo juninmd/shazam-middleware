@@ -43,3 +43,25 @@ describe('Error Type in notifications', () => {
         expect(body).toContain('Error Type:* Route');
     });
 });
+
+describe('Provider payload limits', () => {
+    const longStack = 'at frame (file.ts:1:1)\n'.repeat(600);
+    const bigError = Object.assign(new Error('x'.repeat(1000)), { stack: longStack });
+
+    it('telegram message stays within 4096 chars and closes its code fence', async () => {
+        const options = { telegram: { botToken: 'fake-123', chatId: '1' } };
+        const body = await capture(() => telegramAttachment(bigError, req, new Date(), meta, options));
+        const text = JSON.parse(body).text as string;
+        expect(text.length).toBeLessThanOrEqual(4096);
+        expect(text.endsWith('\n```')).toBe(true);
+    });
+
+    it('discord title and description stay within embed limits', async () => {
+        const options = { discord: { webhookUrl: 'https://discord.example.test/x' } };
+        const body = await capture(() => discordAttachment(bigError, req, new Date(), meta, options));
+        const embed = JSON.parse(body).embeds[0];
+        expect(embed.title.length).toBeLessThanOrEqual(256);
+        expect(embed.description.length).toBeLessThanOrEqual(4096);
+        expect(embed.description.endsWith('```')).toBe(true);
+    });
+});

@@ -1,6 +1,7 @@
 import telegramApi from '../api/telegramApi';
 import checkBrowser from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
+import { TELEGRAM_MAX_MESSAGE, truncate, truncateEscaped } from './truncate';
 
 const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
 
@@ -12,7 +13,7 @@ const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: 
         return (text || '').toString().replace(ESCAPE_REGEX, '\\$&');
     };
 
-    let message = `*${escape(normalized.developerMessage)}*\n\n`;
+    let message = `*${escape(truncate(normalized.developerMessage, 500))}*\n\n`;
     message += `*Link:* ${escape(`${req.protocol}://${req.headers['host']}${req.originalUrl}`)}\n`;
     message += `*Error Type:* ${escape(meta.errorType || 'Unknown')}\n`;
     message += `*Environment:* ${escape(process.env.NODE_ENV || 'Unknown')}\n`;
@@ -23,7 +24,10 @@ const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: 
     message += `*Url:* ${escape(req.originalUrl)}\n`;
 
     if (normalized.stack) {
-        message += `\n\`\`\`\n${escape(normalized.stack)}\n\`\`\``;
+        const open = '\n```\n';
+        const close = '\n```';
+        const budget = TELEGRAM_MAX_MESSAGE - message.length - open.length - close.length;
+        if (budget > 0) message += open + truncateEscaped(escape(normalized.stack), budget) + close;
     }
 
     telegramApi(options, message);
