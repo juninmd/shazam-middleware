@@ -42,6 +42,15 @@ describe('Error Type in notifications', () => {
         const body = await capture(() => telegramAttachment(new Error('boom'), req, new Date(), meta, options));
         expect(body).toContain('Error Type:* Route');
     });
+
+    it('telegram text is valid MarkdownV2: every reserved char outside bold markers is escaped', async () => {
+        // An unescaped "." makes Telegram reject the whole message with HTTP 400 (alert lost).
+        const options = { telegram: { botToken: 'fake-123', chatId: '1' } };
+        const body = await capture(() => telegramAttachment(Object.assign(new Error('boom'), { stack: '' }), req, new Date(), meta, options));
+        const text: string = JSON.parse(body).text;
+        expect(text).toContain('*O\\.S\\.:*');
+        expect(text.replace(/\\./g, '')).not.toMatch(/[_[\]()~>#+\-=|{}.!]/);
+    });
 });
 
 describe('Provider payload limits', () => {

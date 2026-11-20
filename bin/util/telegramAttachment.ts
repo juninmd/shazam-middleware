@@ -22,7 +22,7 @@ const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: 
 `;
     message += `*Agent:* ${escape(browser.agent)}
 `;
-    message += `*O.S.:* ${escape(browser.os)}
+    message += `*O\\.S\\.:* ${escape(browser.os)}
 `;
     message += `*Mobile:* ${escape(browser.mobile)}
 `;

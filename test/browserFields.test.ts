@@ -39,7 +39,7 @@ describe('Agent and O.S. fields without a recognizable browser', () => {
     it('telegram shows Unknown for agent and O.S. without user-agent', async () => {
         const body = await capture(() => telegramAttachment(new Error('boom'), reqWith(undefined), new Date(), meta, { telegram: { botToken: 'fake-123', chatId: '1' } }));
         expect(body).toContain('*Agent:* Unknown');
-        expect(body).toContain('*O.S.:* Unknown');
+        expect(body).toContain('*O\\\\.S\\\\.:* Unknown');
     });
 
     it('keeps real browser data', async () => {
