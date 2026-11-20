@@ -1,6 +1,7 @@
 import telegramApi from '../api/telegramApi';
 import checkBrowser from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
+import environmentName from './environment';
 import { TELEGRAM_MAX_MESSAGE, truncate, truncateEscaped } from './truncate';
 
 const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
@@ -16,7 +17,7 @@ const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: 
     let message = `*${escape(truncate(normalized.developerMessage, 500))}*\n\n`;
     message += `*Link:* ${escape(`${req.protocol}://${req.headers['host']}${req.originalUrl}`)}\n`;
     message += `*Error Type:* ${escape(meta.errorType || 'Unknown')}\n`;
-    message += `*Environment:* ${escape(process.env.NODE_ENV || 'Unknown')}\n`;
+    message += `*Environment:* ${escape(environmentName(options))}\n`;
     message += `*Agent:* ${escape(`${browserN.name} ${browserN.version || 'Unknown'}`)}\n`;
     message += `*O.S.:* ${escape(browserN.os || 'Unknown')}\n`;
     message += `*Mobile:* ${escape(browserN.mobile ? 'YES' : 'NO' || 'Unknown')}\n`;

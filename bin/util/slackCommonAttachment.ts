@@ -1,3 +1,4 @@
+import environmentName from './environment';
 const slackCommonAttachment = (err: any, options: any, errorType: string) => {
     let date = new Date();
 
@@ -14,7 +15,7 @@ const slackCommonAttachment = (err: any, options: any, errorType: string) => {
             },
             {
                 "title": "Environment",
-                "value": (options.env != null ? options.env.NODE_ENV : null || process.env.NODE_ENV),
+                "value": environmentName(options),
                 "short": true
             }
         ],
