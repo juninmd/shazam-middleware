@@ -1,4 +1,5 @@
 import telegramApi from '../api/telegramApi';
+import environmentName from './environment';
 import { TELEGRAM_MAX_MESSAGE, truncate, truncateEscaped } from './truncate';
 
 const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
@@ -10,7 +11,7 @@ const telegramCommonAttachment = (err: any, options: any, errorType: string) => 
 
     let message = `*${escape(truncate(String(err.message), 500))}*\n\n`;
     message += `*Error Type:* ${escape(errorType)}\n`;
-    message += `*Environment:* ${escape((options.env != null ? options.env.NODE_ENV : null || process.env.NODE_ENV))}\n`;
+    message += `*Environment:* ${escape(environmentName(options))}\n`;
 
     if (err.stack) {
         const open = '\n```\n';

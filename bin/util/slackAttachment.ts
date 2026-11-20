@@ -1,6 +1,7 @@
 import slackApi from '../api/slackApi';
 import checkBrowser, { describeBrowser } from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
+import environmentName from './environment';
 
 const slackAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
@@ -21,7 +22,7 @@ const slackAttachment = (err: any, req: any, date: Date, meta: { errorType?: str
             },
             {
                 "title": "Environment",
-                "value": process.env.NODE_ENV || 'Unknown',
+                "value": environmentName(options),
                 "short": true
             },
             {

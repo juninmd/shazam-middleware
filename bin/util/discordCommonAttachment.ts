@@ -1,4 +1,5 @@
 import discordApi from '../api/discordApi';
+import environmentName from './environment';
 import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate';
 
 const discordCommonAttachment = (err: any, options: any, errorType: string) => {
@@ -16,7 +17,7 @@ const discordCommonAttachment = (err: any, options: any, errorType: string) => {
             },
             {
                 name: "Environment",
-                value: (options.env != null ? options.env.NODE_ENV : null || process.env.NODE_ENV) || 'Unknown',
+                value: environmentName(options),
                 inline: true
             }
         ],
