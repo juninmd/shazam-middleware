@@ -1,6 +1,7 @@
 import discordApi from '../api/discordApi';
 import checkBrowser from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
+import environmentName from './environment';
 import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate';
 
 const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
@@ -20,7 +21,7 @@ const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: s
             },
             {
                 name: "Environment",
-                value: process.env.NODE_ENV || 'Unknown',
+                value: environmentName(options),
                 inline: true
             },
             {
