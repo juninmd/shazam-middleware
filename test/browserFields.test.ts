@@ -45,7 +45,10 @@ describe('Agent and O.S. fields without a recognizable browser', () => {
     it('keeps real browser data', async () => {
         const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
         const body = await capture(() => discordAttachment(new Error('boom'), reqWith(ua), new Date(), meta, { discord: { webhookUrl: 'https://discord.example.test/x' } }));
-        expect(body).toContain('"value":"chrome 120.0.0"');
-        expect(body).toContain('"value":"Windows NT 10.0"');
+        const fields = JSON.parse(body).embeds[0].fields;
+        const value = (name: string) => fields.find((f: any) => f.name === name).value;
+        expect(value('Agent')).toMatch(/^chrome 120/);
+        // browser-detect versions spell the OS differently ("Windows NT 10.0" / "Windows 10").
+        expect(value('O.S.')).toMatch(/^Windows/);
     });
 });
