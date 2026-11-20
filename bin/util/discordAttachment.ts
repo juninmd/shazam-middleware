@@ -1,5 +1,5 @@
 import discordApi from '../api/discordApi';
-import checkBrowser from '../util/userAgentUtil';
+import checkBrowser, { describeBrowser } from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
 import environmentName from './environment';
 import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate';
@@ -7,6 +7,7 @@ import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate
 const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
     const normalized = normalizeError(err);
+    const browser = describeBrowser(browserN);
 
     let embed: any = {
         title: truncate(normalized.developerMessage, DISCORD_MAX_TITLE),
@@ -26,17 +27,17 @@ const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: s
             },
             {
                 name: 'Agent',
-                value: `${browserN.name} ${browserN.version}` || 'Unknown',
+                value: browser.agent,
                 inline: true
             },
             {
                 name: 'O.S.',
-                value: `${browserN.os}` || 'Unknown',
+                value: browser.os,
                 inline: true
             },
             {
                 name: 'Mobile',
-                value: `${browserN.mobile ? 'YES' : 'NO'}` || 'Unknown',
+                value: browser.mobile,
                 inline: true
             },
             {

@@ -1,11 +1,12 @@
 import slackApi from '../api/slackApi';
-import checkBrowser from '../util/userAgentUtil';
+import checkBrowser, { describeBrowser } from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
 import environmentName from './environment';
 
 const slackAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
     const normalized = normalizeError(err);
+    const browser = describeBrowser(browserN);
 
     let attachments: any = {
         color: meta.color || "#ff0000",
@@ -26,17 +27,17 @@ const slackAttachment = (err: any, req: any, date: Date, meta: { errorType?: str
             },
             {
                 "title": 'Agent',
-                "value": `${browserN.name} ${browserN.version}` || 'Unknown',
+                "value": browser.agent,
                 "short": true
             },
             {
                 "title": 'O.S.',
-                "value": `${browserN.os}` || 'Unknown',
+                "value": browser.os,
                 "short": true
             },
             {
                 "title": 'Mobile',
-                "value": `${browserN.mobile ? 'YES' : 'NO'}` || 'Unknown',
+                "value": browser.mobile,
                 "short": true
             },
             {

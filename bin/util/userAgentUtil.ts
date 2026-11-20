@@ -51,3 +51,14 @@ const checkBrowser = (agent: string | undefined): any => {
 };
 
 export default checkBrowser;
+
+// Display strings for alerts: unknown parts read "Unknown" instead of "?", "" or "undefined".
+export const describeBrowser = (info: any): { agent: string; os: string; mobile: string } => {
+    const name = info && info.name && info.name !== '?' ? String(info.name) : '';
+    const version = info && info.version ? String(info.version) : '';
+    return {
+        agent: [name, version].filter(Boolean).join(' ') || 'Unknown',
+        os: info && info.os ? String(info.os) : 'Unknown',
+        mobile: info && info.mobile ? 'YES' : 'NO',
+    };
+};
