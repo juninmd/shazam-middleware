@@ -1,5 +1,5 @@
 import telegramApi from '../api/telegramApi';
-import checkBrowser from '../util/userAgentUtil';
+import checkBrowser, { describeBrowser } from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
 import { TELEGRAM_MAX_MESSAGE, truncate, truncateEscaped } from './truncate';
 
@@ -8,6 +8,7 @@ const ESCAPE_REGEX = /[_*[\]()~>#\+\-=|{}.!]/g;
 const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
     const normalized = normalizeError(err);
+    const browser = describeBrowser(browserN);
 
     const escape = (text: any) => {
         return (text || '').toString().replace(ESCAPE_REGEX, '\\$&');
@@ -17,9 +18,9 @@ const telegramAttachment = (err: any, req: any, date: Date, meta: { errorType?: 
     message += `*Link:* ${escape(`${req.protocol}://${req.headers['host']}${req.originalUrl}`)}\n`;
     message += `*Error Type:* ${escape(meta.errorType || 'Unknown')}\n`;
     message += `*Environment:* ${escape(process.env.NODE_ENV || 'Unknown')}\n`;
-    message += `*Agent:* ${escape(`${browserN.name} ${browserN.version || 'Unknown'}`)}\n`;
-    message += `*O.S.:* ${escape(browserN.os || 'Unknown')}\n`;
-    message += `*Mobile:* ${escape(browserN.mobile ? 'YES' : 'NO' || 'Unknown')}\n`;
+    message += `*Agent:* ${escape(browser.agent)}\n`;
+    message += `*O.S.:* ${escape(browser.os)}\n`;
+    message += `*Mobile:* ${escape(browser.mobile)}\n`;
     message += `*Method:* ${escape(req.method)}\n`;
     message += `*Url:* ${escape(req.originalUrl)}\n`;
 
