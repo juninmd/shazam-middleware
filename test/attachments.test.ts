@@ -84,4 +84,17 @@ describe('Provider payload limits', () => {
         expect(embed.description.length).toBeLessThanOrEqual(4096);
         expect(embed.description.endsWith('```')).toBe(true);
     });
+
+    it('discord embed respects field (1024) and total (6000) limits when the request URL is huge', async () => {
+        // Discord rejects the whole webhook with HTTP 400 when a field value or the embed total is over the limit.
+        const options = { discord: { webhookUrl: 'https://discord.example.test/x' } };
+        const longReq = { ...req, originalUrl: '/x?q=' + 'a'.repeat(3000) };
+        const body = await capture(() => discordAttachment(bigError, longReq, new Date(), meta, options));
+        const embed = JSON.parse(body).embeds[0];
+        const total = embed.title.length + embed.description.length
+            + embed.fields.reduce((sum: number, f: any) => sum + f.name.length + f.value.length, 0);
+        expect(Math.max(...embed.fields.map((f: any) => f.value.length))).toBeLessThanOrEqual(1024);
+        expect(total).toBeLessThanOrEqual(6000);
+        expect(embed.description.endsWith('```')).toBe(true);
+    });
 });
