@@ -35,3 +35,15 @@ bun test     # the test script (package.json)
 - `logMiddleware.ts` is on every request path. Watch its latency when you change it.
 - User-Agent parsing is a hot path. `bin/util/userAgentUtil.ts` caches results in a `Map`. Keep the eviction policy in mind before you change it.
 - `.jules/bolt.md` has earlier performance notes from an agent. Read them before you touch the hot path.
+
+<!-- base-actions-main-policy -->
+## GitHub Actions — padrão obrigatório (@main)
+
+- Referencie as actions internas sempre pelo branch, nunca por SHA:
+  - `uses: juninmd/base-actions/<action>@main`
+  - `uses: juninmd/base-actions/.github/workflows/<arquivo>.yml@main`
+- Não fixe `@<sha>` em `juninmd/base-actions`: a atualização é centralizada no
+  `main` e passa a valer no próximo run.
+- PRs cujos checks não iniciam por billing/spending limit são mesclados pelo bot central
+  `juninmd/base-actions/.github/workflows/auto-merge-billing-blocked.yml`.
+  Para impedir o merge automático de um PR, aplique a label `do-not-merge`.
