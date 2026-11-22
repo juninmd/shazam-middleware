@@ -65,6 +65,17 @@ describe('Provider payload limits', () => {
         expect(text.endsWith('\n```')).toBe(true);
     });
 
+    it('telegram message stays within 4096 chars when the request URL is huge', async () => {
+        // Link and Url had no budget: a 3000-char query string pushed the text past 4096 and Telegram dropped the alert.
+        const options = { telegram: { botToken: 'fake-123', chatId: '1' } };
+        const longReq = { ...req, originalUrl: '/x?q=' + 'a'.repeat(3000) };
+        const body = await capture(() => telegramAttachment(bigError, longReq, new Date(), meta, options));
+        const text = JSON.parse(body).text as string;
+        expect(text.length).toBeLessThanOrEqual(4096);
+        expect(text).toContain('*Url:* /x?q\\=aaa');
+        expect(text.endsWith('\n```')).toBe(true);
+    });
+
     it('discord title and description stay within embed limits', async () => {
         const options = { discord: { webhookUrl: 'https://discord.example.test/x' } };
         const body = await capture(() => discordAttachment(bigError, req, new Date(), meta, options));

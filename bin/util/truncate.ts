@@ -2,6 +2,8 @@
 export const TELEGRAM_MAX_MESSAGE = 4096;
 export const DISCORD_MAX_TITLE = 256;
 export const DISCORD_MAX_DESCRIPTION = 4096;
+// Request URLs are user-controlled; cap them so a huge query string cannot crowd out the alert.
+export const MAX_URL_LENGTH = 500;
 
 const ELLIPSIS = '...';
 
