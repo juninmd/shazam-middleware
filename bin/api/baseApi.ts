@@ -4,7 +4,11 @@ export interface RequestOptions {
   body?: any;
   headers?: Record<string, string>;
   json?: boolean;
+  timeoutMs?: number;
 }
+
+// Without a deadline a stuck webhook keeps the promise and its socket open forever.
+const DEFAULT_TIMEOUT_MS = 10_000;
 
 export const requestApi = async (options: RequestOptions): Promise<any> => {
   const method = options.method || 'GET';
@@ -26,7 +30,8 @@ export const requestApi = async (options: RequestOptions): Promise<any> => {
     const res = await fetch(options.url, {
       method,
       headers,
-      body
+      body,
+      signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS)
     });
 
     const text = await res.text();
