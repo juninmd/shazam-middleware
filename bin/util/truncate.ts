@@ -2,6 +2,7 @@
 export const TELEGRAM_MAX_MESSAGE = 4096;
 export const DISCORD_MAX_TITLE = 256;
 export const DISCORD_MAX_DESCRIPTION = 4096;
+export const DISCORD_MAX_FIELD_VALUE = 1024;
 
 const ELLIPSIS = '...';
 

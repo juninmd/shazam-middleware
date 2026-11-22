@@ -2,7 +2,7 @@ import discordApi from '../api/discordApi';
 import checkBrowser, { describeBrowser } from '../util/userAgentUtil';
 import normalizeError from '../util/normalizeError';
 import environmentName from './environment';
-import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_TITLE, truncate } from './truncate';
+import { DISCORD_MAX_DESCRIPTION, DISCORD_MAX_FIELD_VALUE, DISCORD_MAX_TITLE, truncate } from './truncate';
 
 const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: string; color?: string }, options: any) => {
     let browserN = req._browserInfo || checkBrowser(req.headers['user-agent']);
@@ -42,7 +42,7 @@ const discordAttachment = (err: any, req: any, date: Date, meta: { errorType?: s
             },
             {
                 name: req.method,
-                value: req.originalUrl,
+                value: truncate(String(req.originalUrl), DISCORD_MAX_FIELD_VALUE),
                 inline: true
             },
         ],
